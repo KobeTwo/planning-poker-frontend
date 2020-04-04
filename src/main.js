@@ -14,6 +14,15 @@ Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
 
+Vue.mixin({
+  data: function() {
+    return {
+      strapiBaseURL: process.env.VUE_APP_STRAPI_BASE_URL,
+      graphqlURL: process.env.VUE_APP_STRAPI_BASE_URL + '/graphql'
+    };
+  }
+})
+
 new Vue({
   router,
   store,
