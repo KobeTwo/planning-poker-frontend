@@ -1,9 +1,10 @@
 <template>
   <div class="games">
     <h1>Choose your card</h1>
+    <b-avatar variant="primary"/> <span class="mr-auto">{{this.player.name}}</span>
     <b-card-group deck>
       <b-card v-for="card in possibleCards" :key="card.name"
-        :title=card.value
+        :title=card.value.toString()
         :sub-title=card.name 
         img-top
         :img-alt=card.name
@@ -23,6 +24,9 @@
       },
       possibleCards() {
         return this.$store.getters.possibleCards
+      },
+      player () {
+        return this.$store.getters.currentPlayer
       }
     }
   }

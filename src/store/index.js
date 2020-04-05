@@ -5,16 +5,23 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    currentGameInstance: {}
+    currentGameInstance: {},
+    currentPlayer: {}
   },
   mutations: {
     setCurrentGameInstance(state, currentGameInstance){
       state.currentGameInstance = currentGameInstance;
+    }, 
+    setCurrentPlayer(state, currentPlayer){
+      state.currentPlayer = currentPlayer;
     }
   },
   actions: {
     setCurrentGameInstance(context, gameInstance){
       context.commit('setCurrentGameInstance', gameInstance)
+    },
+    setCurrentPlayer(context, currentPlayer){
+      context.commit('setCurrentPlayer', currentPlayer)
     }
   },
   modules: {
@@ -22,6 +29,9 @@ export default new Vuex.Store({
   getters: {
     currentGameInstance: state => {
       return state.currentGameInstance;
+    },
+    currentPlayer: state => {
+      return state.currentPlayer;
     },
     possibleCards: state => {
       if(state.currentGameInstance.game?.cards){

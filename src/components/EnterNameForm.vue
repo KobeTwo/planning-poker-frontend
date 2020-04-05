@@ -21,6 +21,7 @@
 </template>
 
 <script>
+  import axios from 'axios';
   export default {
     data() {
       return {
@@ -37,7 +38,33 @@
     methods: {
       async onSubmit(evt) {
         evt.preventDefault()
-        alert(this.form.name);
+        try {
+          const res = await axios.post(
+                  this.graphqlURL, {
+                    query: `mutation {
+                              createPlayer(
+                                input: {
+                                  data: {
+                                    name: "${this.form.name}"
+                                    lastActive: "${new Date().toISOString()}"
+                                    gameinstance: "${this.gameInstance.id}"
+                                  }
+                                }
+                              ) {
+                                player {
+                                  id
+                                  name
+                                }
+                              }
+                            }`
+                  })
+          let player = res.data.data.createPlayer.player
+          this.$cookies.set("player_" + this.gameInstance.id,player.id, -1); 
+          this.$store.dispatch('setCurrentPlayer', player)
+        } catch (e) {
+          alert(e);
+          console.log('err', e)
+        }
       }
     }
   }

@@ -3,6 +3,7 @@ import BootstrapVue from 'bootstrap-vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueClipboard from 'vue-clipboard2'
+import VueCookies from 'vue-cookies'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -14,6 +15,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(VueAxios, axios)
 Vue.use(BootstrapVue)
 Vue.use(VueClipboard)
+Vue.use(VueCookies)
 
 Vue.config.productionTip = false
 
