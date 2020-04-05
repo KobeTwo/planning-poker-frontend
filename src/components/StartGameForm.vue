@@ -51,7 +51,6 @@
         evt.preventDefault()
 
         try {
-          alert(this.gameId);
           const res = await axios.post(
                   this.graphqlURL, {
                     query: `mutation {
@@ -73,8 +72,7 @@
                             }`
                   })
           const gameInstanceId = res.data.data.createGameinstance.gameinstance.id;
-          alert(gameInstanceId);
-          this.$router.push({ name: 'Game', params: { gameInstanceId: gameInstanceId} }) 
+          this.$router.push({ name: 'GameAdmin', params: { gameInstanceId: gameInstanceId} }) 
 
         } catch (e) {
           alert(e);

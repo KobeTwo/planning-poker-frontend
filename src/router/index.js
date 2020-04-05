@@ -29,6 +29,12 @@ const routes = [
     name: 'Game',
     component: () => import(/* webpackChunkName: "Game" */ '../views/Game.vue'),
     props: true
+  },
+  {
+    path: '/GameAdmin/:gameInstanceId',
+    name: 'GameAdmin',
+    component: () => import(/* webpackChunkName: "Game" */ '../views/GameAdmin.vue'),
+    props: true
   }
 ]
 
