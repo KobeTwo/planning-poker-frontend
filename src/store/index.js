@@ -5,28 +5,45 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    currentGame: {},
     currentGameInstance: {},
-    currentPlayer: {}
+    currentPlayer: {},
+    allPlayers:[] 
   },
   mutations: {
+    setCurrentGame(state, currentGame){
+      state.currentGame = currentGame;
+    }, 
     setCurrentGameInstance(state, currentGameInstance){
       state.currentGameInstance = currentGameInstance;
     }, 
     setCurrentPlayer(state, currentPlayer){
       state.currentPlayer = currentPlayer;
+    },
+    setAllPlayers(state, allPlayers){
+      state.allPlayers = allPlayers;
     }
   },
   actions: {
+    setCurrentGame(context, currentGame){
+      context.commit('setCurrentGame', currentGame)
+    },
     setCurrentGameInstance(context, gameInstance){
       context.commit('setCurrentGameInstance', gameInstance)
     },
     setCurrentPlayer(context, currentPlayer){
       context.commit('setCurrentPlayer', currentPlayer)
+    },
+    setAllPlayers(context, allPlayers){
+      context.commit('setAllPlayers', allPlayers)
     }
   },
   modules: {
   },
   getters: {
+    currentGame: state => {
+      return state.currentGame;
+    },
     currentGameInstance: state => {
       return state.currentGameInstance;
     },
@@ -39,6 +56,18 @@ export default new Vuex.Store({
       }else{
         return [];
       }
+    },
+    allPlayers: state => {
+      return state.allPlayers;
+    },
+    otherPlayers: state => {
+      let otherPlayers = [];
+      state.allPlayers.forEach(function (player) {
+        if(player.id != state.currentPlayer.id){
+          otherPlayers.push(player);
+        }
+      });
+      return otherPlayers
     }
   }
 })

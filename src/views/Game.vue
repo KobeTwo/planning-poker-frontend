@@ -1,8 +1,10 @@
 <template>
   <div>
     <b-overlay :show="showEnterNameFormOverlay" rounded="sm">
+      <Nav/>
       <GameInfo/>
       <YourCardChooser/>
+      <OtherPlayerCards/>
 
 
       <template v-slot:overlay>
@@ -15,17 +17,21 @@
 </template>
 
 <script>
+import Nav from '@/components/Nav.vue'
 import GameInfo from '@/components/GameInfo.vue'
 import EnterNameForm from '@/components/EnterNameForm.vue'
 import YourCardChooser from '@/components/YourCardChooser.vue'
+import OtherPlayerCards from '@/components/OtherPlayerCards.vue'
 import axios from 'axios';
 // @ is an alias to /src
 export default {
   name: 'game',
   components: {
+    Nav,
     EnterNameForm,
     GameInfo,
-    YourCardChooser
+    YourCardChooser,
+    OtherPlayerCards
   },
   data: function () {
     return {
@@ -41,9 +47,14 @@ export default {
     }
   },
   created() {
-    this.getGameInstance();
+    this.initGameInstance();
+    setInterval(function () {   
+      if(this.player){
+        this.sendPlayerKeepAlive();
+      }    
+    }.bind(this), 2000);
     setInterval(function () {       
-      this.sendPlayerKeepAlive();
+      this.getAllPlayers();
     }.bind(this), 2000);
   },
   watch: {
@@ -64,45 +75,15 @@ export default {
         this.showEnterNameFormOverlay = true
       }
     },
-    async getGameInstance () {
-      try {
-        const res = await axios.post(
-                this.graphqlURL, {
-                  query: `query {
-                            gameinstance(id: "${this.$attrs.gameInstanceId}")
-                            {
-                              id
-                              title
-                              description
-                              game{
-                                id
-                                cards(sort: "value:asc"){
-                                  name
-                                  value
-                                  shortDescription
-                                  longDescription
-                                  icon {
-                                    url
-                                  }
-                                }
-                              }
-                            }
-                          }`
-                })
-        this.$store.dispatch('setCurrentGameInstance', res.data.data.gameinstance)
-      } catch (e) {
-        alert(e);
-        console.log('err', e)
-      }
-    },
     async getPlayer () {
       try {
-        let playerId = this.$cookies.get("player_" + this.gameInstance.id);
+        let playerId = this.$cookies.get("player_" + this.$attrs.gameInstanceId);
         let res = await axios.post(
                 this.graphqlURL, {
                   query: `query {
                             player(id: "${playerId}")
                             {
+                              id
                               name
                               chosenCard {
                                 id
@@ -123,7 +104,7 @@ export default {
                     query: `mutation {
                               updatePlayer(
                                 input: {
-                                  where: { id: "5b28f1747c739e4afb48605c" }
+                                  where: { id: "${this.player.id}" }
                                   data: {
                                     lastActive: "${new Date().toISOString()}"
                                   }
@@ -136,6 +117,29 @@ export default {
                               }
                             }`
                   })
+      } catch (e) {
+        alert(e);
+        console.log('err', e)
+      }
+    },
+    async getAllPlayers () {
+      try {
+        let res = await axios.post(
+                  this.graphqlURL, {
+                    query: `query {
+                              gameinstance( id: "${this.$attrs.gameInstanceId}")
+                              {
+                                id
+                                players ( where: {lastActive_gt:"${new Date(new Date - 10000).toISOString()}"})
+                                {
+                                  id
+                                  name
+                                  lastActive
+                                }
+                              }
+                            }`
+                  })
+        this.$store.dispatch('setAllPlayers', res.data.data.gameinstance.players)
       } catch (e) {
         alert(e);
         console.log('err', e)

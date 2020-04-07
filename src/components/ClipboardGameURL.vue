@@ -1,11 +1,27 @@
 <template>
   <div>
-    <h1>Game ClipboardGameURL</h1>
-    URL: {{this.url}}
-    <button type="button"
-      v-clipboard:copy="url"
-      v-clipboard:success="onCopy"
-      v-clipboard:error="onError">Copy to clipboard!</button>
+    <b-form>
+      <b-form-group 
+        label="Game participation url:"
+      >
+
+        <b-input-group>
+          <template v-slot:prepend><b-input-group-text><b-icon-link/></b-input-group-text></template>
+          <b-form-input disabled id="input-url" v-model="this.url"></b-form-input>
+          <template v-slot:append>
+            <b-button variant="outline-primary" id="copy-gameurl-to-clipboard" type="button"
+              v-clipboard:copy="url"
+              v-clipboard:success="onCopy"
+              v-clipboard:error="onError"><b-icon-clipboard/></b-button>
+              <b-popover ref="popover" target="copy-gameurl-to-clipboard" variant="info" placement="bottom" :disabled=true>
+                copied!
+              </b-popover>
+              <b-button variant="outline-primary" id="copy-gameurl-to-clipboard" type="button"><b-icon-box-arrow-up-right/></b-button>
+          </template>
+        </b-input-group>
+      
+      </b-form-group>
+    </b-form>
   </div>
 </template>
 
@@ -22,8 +38,9 @@
         }
     },
     methods:{
-      onCopy: function (e) {
-        alert('You just copied: ' + e.text)
+      onCopy: function () {
+        this.$refs.popover.$emit('open');
+        setTimeout(function() { this.$refs.popover.$emit('close'); }.bind(this), 1000);
       },
       onError: function () {
         alert('Failed to copy texts')

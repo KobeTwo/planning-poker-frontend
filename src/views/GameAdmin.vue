@@ -1,44 +1,28 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <GameInfo/>
-    <ClipboardGameURL/>
+    <Nav/>
+    <b-jumbotron header-level="5" :header="this.gameInstance.title" :lead="this.gameInstance.description">
+      <ClipboardGameURL/>
+    </b-jumbotron>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import GameInfo from '@/components/GameInfo.vue'
+import Nav from '@/components/Nav.vue'
 import ClipboardGameURL from '@/components/ClipboardGameURL.vue'
-import axios from 'axios';
 export default {
   name: 'gameadmin',
   components: {
-    GameInfo,
+    Nav,
     ClipboardGameURL
   },
   created() {
-    this.getGameInstance();
+    this.initGameInstance();
   },
-  methods:{
-    async getGameInstance () {
-      try {
-        const res = await axios.post(
-                this.graphqlURL, {
-                  query: `query {
-                            gameinstance(id: "${this.$attrs.gameInstanceId}")
-                            {
-                              id
-                              title
-                              description
-                            }
-                          }`
-                })
-        this.$store.dispatch('setCurrentGameInstance', res.data.data.gameinstance)
-      } catch (e) {
-        alert(e);
-        console.log('err', e)
-      }
+  computed: {
+    gameInstance () {
+      return this.$store.state.currentGameInstance
     }
   }
 }

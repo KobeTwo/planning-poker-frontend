@@ -1,8 +1,7 @@
 <template>
   <div>
-    <h1>Game Admin</h1>
-    Title: {{this.gameInstance.title}}
-    Description: {{this.gameInstance.description}}
+    <b-jumbotron :header="this.gameInstance.title" :lead="this.gameInstance.description">
+    </b-jumbotron>
   </div>
 </template>
 

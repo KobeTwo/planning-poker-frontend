@@ -1,6 +1,5 @@
 <template>
-  <div class="games">
-    <h1>Games</h1>
+  <b-container fluid class="games mt-3">
     <b-card-group deck>
       <b-card v-for="game in games" :key="game.name"
         :title=game.name 
@@ -13,7 +12,7 @@
         <router-link :to="{ name: 'StartGame', params: { gameId: game.id }}"><b-button variant="primary">Start Game</b-button></router-link>
       </b-card>
     </b-card-group>
-  </div>
+  </b-container>
 </template>
 
 <script>

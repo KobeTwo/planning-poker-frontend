@@ -1,16 +1,14 @@
 <template>
   <div class="games">
-    <h1>Choose your card</h1>
-    <b-avatar variant="primary"/> <span class="mr-auto" v-if="this.player">{{this.player.name}}</span>
+    <h1>Other player cards</h1>
     <b-card-group deck>
-      <b-card v-for="card in possibleCards" :key="card.name"
-        :title=card.value.toString()
-        :sub-title=card.name 
-        img-top
-        :img-alt=card.name
+      <b-card v-for="player in otherPlayers" :key="player.name"
+        :header=player.name
+        title="???"
+        sub-title="???"
         style="max-width: 20rem;"
       >
-        <b-card-text>{{ card.shortDescription }}</b-card-text>
+        <b-card-text>???</b-card-text>
       </b-card>
     </b-card-group>
   </div>
@@ -27,6 +25,9 @@
       },
       player () {
         return this.$store.getters.currentPlayer
+      },
+      otherPlayers () {
+        return this.$store.getters.otherPlayers
       }
     }
   }
