@@ -138,11 +138,21 @@ export default {
                               gameinstance( id: "${this.$attrs.gameInstanceId}")
                               {
                                 id
-                                players ( where: {lastActive_gt:"${new Date(new Date - 10000).toISOString()}"})
+                                players ( where: {lastActive_gt:"${new Date(new Date - 20000).toISOString()}"})
                                 {
                                   id
                                   name
                                   lastActive
+                                  chosenCard {
+                                  id
+                                  name
+                                  value
+                                  shortDescription
+                                  longDescription
+                                  icon {
+                                    url
+                                  }
+                              }
                                 }
                               }
                             }`

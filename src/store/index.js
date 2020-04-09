@@ -68,6 +68,22 @@ export default new Vuex.Store({
         }
       });
       return otherPlayers
+    },
+    otherPlayersVoted: (state, getters) => {
+      for (const player of getters.otherPlayers){
+        if(!player.chosenCard){
+          return false;
+        }
+      }
+      return true;
+    },
+    allPlayersVoted: (state, getters) => {
+      for (const player of getters.allPlayers){
+        if(!player.chosenCard){
+          return false;
+        }
+      }
+      return true;
     }
   }
 })

@@ -9,45 +9,41 @@
       <template v-slot:header>
         <b-avatar size="sm" variant="light"></b-avatar> <span class="mr-auto" v-if="player">{{player.name}}</span>
       </template>
-      <div v-if="this.player && !this.player.chosenCard">
-        <b-container fluid>
-          <b-row align-content="center">
-            <b-col class="mt-3" v-for="card in possibleCards" :key="card.name">
-              <b-card 
-                :title=card.value.toString()
-                :sub-title=card.name 
-                img-top
-                :img-alt=card.name
-                class="text-center"
-                style="max-width: 16rem; width: 16rem;"
-                @click="chooseCard(card)"
-              >
-                <b-card-text>{{ card.shortDescription }}</b-card-text>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-container>
-      </div>
-      <div v-if="this.player && this.player.chosenCard">
-        <b-container fluid>
-          <b-row align-content="center">
-            <b-col class="mt-3">
-              <b-card 
-                bg-variant="primary" text-variant="white"
-                sub-title-text-variant="white"
-                :title=this.player.chosenCard.value.toString()
-                :sub-title=this.player.chosenCard.name 
-                img-top
-                :img-alt=this.player.chosenCard.name
-                class="text-center"
-                style="max-width: 16rem; width: 16rem;"
-              >
-                <b-card-text>{{ this.player.chosenCard.shortDescription }}</b-card-text>
-              </b-card> 
-            </b-col>
-          </b-row>
-        </b-container>
-      </div>
+      <b-container fluid  v-if="this.player && !this.player.chosenCard">
+        <b-row align-content="center" cols="1" cols-sm="2" cols-md="3" cols-lg="4" cols-xl="5">
+          <b-col class="mt-3" v-for="card in possibleCards" :key="card.name">
+            <b-card 
+              :title=card.value.toString()
+              :sub-title=card.name 
+              img-top
+              :img-alt=card.name
+              class="text-center"
+              style="max-width: 10rem; width: 10rem;"
+              @click="chooseCard(card)"
+            >
+              <b-card-text>{{ card.shortDescription }}</b-card-text>
+            </b-card>
+          </b-col>
+        </b-row>
+      </b-container>
+      <b-container fluid v-if="this.player && this.player.chosenCard">
+        <b-row align-content="center">
+          <b-col class="mt-3">
+            <b-card 
+              bg-variant="primary" text-variant="white"
+              sub-title-text-variant="white"
+              :title=this.player.chosenCard.value.toString()
+              :sub-title=this.player.chosenCard.name 
+              img-top
+              :img-alt=this.player.chosenCard.name
+              class="text-center"
+              style="max-width: 10rem; width: 10rem;"
+            >
+              <b-card-text>{{ this.player.chosenCard.shortDescription }}</b-card-text>
+            </b-card> 
+          </b-col>
+        </b-row>
+      </b-container>
     </b-card>
   </div>
 </template>
