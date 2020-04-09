@@ -2,9 +2,12 @@
   <div>
     <b-overlay :show="showEnterNameFormOverlay" rounded="sm">
       <Nav/>
-      <GameInfo/>
-      <YourCardChooser/>
-      <OtherPlayerCards/>
+      <b-jumbotron fluid container-fluid header-level="5" :header="this.gameInstance.title" :lead="this.gameInstance.description">
+        <hr class="my-4">
+        <YourCardChooser/>
+        <hr class="my-4">
+        <OtherPlayerCards/>
+      </b-jumbotron>
 
 
       <template v-slot:overlay>
@@ -18,7 +21,6 @@
 
 <script>
 import Nav from '@/components/Nav.vue'
-import GameInfo from '@/components/GameInfo.vue'
 import EnterNameForm from '@/components/EnterNameForm.vue'
 import YourCardChooser from '@/components/YourCardChooser.vue'
 import OtherPlayerCards from '@/components/OtherPlayerCards.vue'
@@ -29,7 +31,6 @@ export default {
   components: {
     Nav,
     EnterNameForm,
-    GameInfo,
     YourCardChooser,
     OtherPlayerCards
   },
@@ -87,6 +88,13 @@ export default {
                               name
                               chosenCard {
                                 id
+                                name
+                                value
+                                shortDescription
+                                longDescription
+                                icon {
+                                  url
+                                }
                               }
                             }
                           }`

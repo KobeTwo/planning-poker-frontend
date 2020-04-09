@@ -16,7 +16,10 @@
               <b-popover ref="popover" target="copy-gameurl-to-clipboard" variant="info" placement="bottom" :disabled=true>
                 copied!
               </b-popover>
-              <b-button variant="outline-primary" id="copy-gameurl-to-clipboard" type="button"><b-icon-box-arrow-up-right/></b-button>
+              
+                <b-button variant="outline-primary" id="copy-gameurl-to-clipboard" type="button" v-on:click="startGameInNewTab()">
+                  <b-icon-box-arrow-up-right/>
+                </b-button>
           </template>
         </b-input-group>
       
@@ -29,13 +32,16 @@
   export default {
     name: 'ClipboardGameURL',
     computed: {
-        url:function () {
-          let URLLocation = this.$router.resolve({ 
-            name: 'Game',
-            params: { gameInstanceId: this.$store.state.currentGameInstance.id },
-          });
-          return window.location.origin + URLLocation.href;
-        }
+      gameInstance () {
+        return this.$store.getters.currentGameInstance
+      },
+      url:function () {
+        let URLLocation = this.$router.resolve({ 
+          name: 'Game',
+          params: { gameInstanceId: this.gameInstance.id },
+        });
+        return window.location.origin + URLLocation.href;
+      }
     },
     methods:{
       onCopy: function () {
@@ -44,7 +50,10 @@
       },
       onError: function () {
         alert('Failed to copy texts')
-      }
+      },
+      startGameInNewTab: function () {
+        window.open(this.url, '_blank');
+      },
     }
   }
 </script>

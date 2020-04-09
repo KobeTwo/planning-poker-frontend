@@ -1,6 +1,6 @@
 <template>
   <div class="games">
-    <b-jumbotron header-level="5" :header="'Start a new ' + game.name" :lead="game.shortDescription">
+    <b-jumbotron fluid container-fluid  header-level="5" :header="'Start a new ' + game.name" :lead="game.shortDescription">
       <b-form @submit="onSubmit" >
         <b-form-group
           id="input-group-title"

@@ -63,7 +63,7 @@ export default new Vuex.Store({
     otherPlayers: state => {
       let otherPlayers = [];
       state.allPlayers.forEach(function (player) {
-        if(player.id != state.currentPlayer.id){
+        if(state.currentPlayer && player.id != state.currentPlayer.id){
           otherPlayers.push(player);
         }
       });

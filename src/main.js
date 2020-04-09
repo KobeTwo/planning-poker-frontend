@@ -46,6 +46,7 @@ Vue.mixin({
                                   url
                                 }
                                 cards(sort: "value:asc"){
+                                  id
                                   name
                                   value
                                   shortDescription
@@ -78,6 +79,7 @@ Vue.mixin({
                                 url
                               }
                               cards(sort: "value:asc"){
+                                id
                                 name
                                 value
                                 shortDescription

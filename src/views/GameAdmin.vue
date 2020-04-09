@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <Nav/>
-    <b-jumbotron header-level="5" :header="this.gameInstance.title" :lead="this.gameInstance.description">
+    <b-jumbotron fluid container-fluid  header-level="5" :header="this.gameInstance.title" :lead="this.gameInstance.description">
       <ClipboardGameURL/>
     </b-jumbotron>
   </div>

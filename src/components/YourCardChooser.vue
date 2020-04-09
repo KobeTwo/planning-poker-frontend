@@ -1,32 +1,97 @@
 <template>
   <div class="games">
-    <h1>Choose your card</h1>
-    <b-avatar variant="primary"/> <span class="mr-auto" v-if="this.player">{{this.player.name}}</span>
-    <b-card-group deck>
-      <b-card v-for="card in possibleCards" :key="card.name"
-        :title=card.value.toString()
-        :sub-title=card.name 
-        img-top
-        :img-alt=card.name
-        style="max-width: 20rem;"
-      >
-        <b-card-text>{{ card.shortDescription }}</b-card-text>
-      </b-card>
-    </b-card-group>
+    <h5>Choose your card</h5>
+    <b-card 
+        border-variant="primary"
+        header-bg-variant="primary"
+        header-text-variant="white">
+      
+      <template v-slot:header>
+        <b-avatar size="sm" variant="light"></b-avatar> <span class="mr-auto" v-if="player">{{player.name}}</span>
+      </template>
+      <div v-if="this.player && !this.player.chosenCard">
+        <b-container fluid>
+          <b-row align-content="center">
+            <b-col class="mt-3" v-for="card in possibleCards" :key="card.name">
+              <b-card 
+                :title=card.value.toString()
+                :sub-title=card.name 
+                img-top
+                :img-alt=card.name
+                class="text-center"
+                style="max-width: 16rem; width: 16rem;"
+                @click="chooseCard(card)"
+              >
+                <b-card-text>{{ card.shortDescription }}</b-card-text>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-container>
+      </div>
+      <div v-if="this.player && this.player.chosenCard">
+        <b-container fluid>
+          <b-row align-content="center">
+            <b-col class="mt-3">
+              <b-card 
+                bg-variant="primary" text-variant="white"
+                sub-title-text-variant="white"
+                :title=this.player.chosenCard.value.toString()
+                :sub-title=this.player.chosenCard.name 
+                img-top
+                :img-alt=this.player.chosenCard.name
+                class="text-center"
+                style="max-width: 16rem; width: 16rem;"
+              >
+                <b-card-text>{{ this.player.chosenCard.shortDescription }}</b-card-text>
+              </b-card> 
+            </b-col>
+          </b-row>
+        </b-container>
+      </div>
+    </b-card>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
   export default {
     computed: {
       gameInstance () {
-        return this.$store.state.currentGameInstance
+        return this.$store.getters.currentGameInstance
       },
       possibleCards() {
         return this.$store.getters.possibleCards
       },
       player () {
         return this.$store.getters.currentPlayer
+      }
+    },
+    methods:{
+      async chooseCard(chosenCard) {
+        this.player.chosenCard = chosenCard;
+        try {
+        await axios.post(
+                  this.graphqlURL, {
+                    query: `mutation {
+                              updatePlayer(
+                                input: {
+                                  where: { id: "${this.player.id}" }
+                                  data: {
+                                    chosenCard: "${this.player.chosenCard.id}"
+                                  }
+                                }
+                              ) {
+                                player {
+                                  id
+                                  name
+                                }
+                              }
+                            }`
+                    })
+        } catch (e) {
+          alert(e);
+          console.log('err', e)
+        }
       }
     }
   }

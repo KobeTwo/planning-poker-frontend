@@ -54,6 +54,16 @@
                                 player {
                                   id
                                   name
+                                  chosenCard {
+                                    id
+                                    name
+                                    value
+                                    shortDescription
+                                    longDescription
+                                    icon {
+                                      url
+                                    }
+                                  }
                                 }
                               }
                             }`

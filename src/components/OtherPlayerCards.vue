@@ -1,14 +1,17 @@
 <template>
   <div class="games">
-    <h1>Other player cards</h1>
-    <b-card-group deck>
+    <h5>Other players</h5>
+    <b-card-group  deck>
       <b-card v-for="player in otherPlayers" :key="player.name"
-        :header=player.name
-        title="???"
-        sub-title="???"
-        style="max-width: 20rem;"
+        style="max-width: 16rem; width: 16rem;"
       >
-        <b-card-text>???</b-card-text>
+        <template v-slot:header>
+          <b-avatar size="sm" variant="secondary"></b-avatar> <span class="mr-auto" v-if="player">{{player.name}}</span>
+        </template>
+        <b-card-title class="text-center">
+          <b-spinner label="thinking"></b-spinner> 
+        </b-card-title>
+         
       </b-card>
     </b-card-group>
   </div>
@@ -18,7 +21,7 @@
   export default {
     computed: {
       gameInstance () {
-        return this.$store.state.currentGameInstance
+        return this.$store.getters.currentGameInstance
       },
       possibleCards() {
         return this.$store.getters.possibleCards
