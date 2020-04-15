@@ -29,18 +29,29 @@
       <b-container fluid v-if="this.player && this.player.chosenCard">
         <b-row align-content="center">
           <b-col class="mt-3">
-            <b-card 
-              bg-variant="primary" text-variant="white"
-              sub-title-text-variant="white"
-              :title=this.player.chosenCard.value.toString()
-              :sub-title=this.player.chosenCard.name 
-              img-top
-              :img-alt=this.player.chosenCard.name
-              class="text-center"
-              style="max-width: 10rem; width: 10rem;"
-            >
-              <b-card-text>{{ this.player.chosenCard.shortDescription }}</b-card-text>
-            </b-card> 
+            <div @click="resetCard()" style="max-width: 10rem; width: 10rem;" @mouseenter="showCardResetOverlay = true" @mouseleave="showCardResetOverlay = false">
+              <b-overlay :show="showCardResetOverlay" >
+                <b-card 
+                  bg-variant="primary" text-variant="white"
+                  sub-title-text-variant="white"
+                  :title=this.player.chosenCard.value.toString()
+                  :sub-title=this.player.chosenCard.name 
+                  img-top
+                  :img-alt=this.player.chosenCard.name
+                  class="text-center"
+                  style="max-width: 10rem; width: 10rem;"
+                >
+                  <b-card-text>{{ this.player.chosenCard.shortDescription }}</b-card-text>
+                </b-card> 
+                <template v-slot:overlay>
+                  <div class="text-center">
+                    <b-icon-pencil-square  style="width: 2rem; height: 2rem;"/>
+                    <br/>
+                    Click to edit
+                  </div>
+                </template>
+              </b-overlay >
+            </div>
           </b-col>
         </b-row>
       </b-container>
@@ -51,6 +62,11 @@
 <script>
 import axios from 'axios';
   export default {
+    data: function () {
+      return {
+        showCardResetOverlay: false
+      }
+    },
     computed: {
       gameInstance () {
         return this.$store.getters.currentGameInstance
@@ -64,9 +80,10 @@ import axios from 'axios';
     },
     methods:{
       async chooseCard(chosenCard) {
+        this.showCardResetOverlay = false
         this.player.chosenCard = chosenCard;
         try {
-        await axios.post(
+          await axios.post(
                   this.graphqlURL, {
                     query: `mutation {
                               updatePlayer(
@@ -84,6 +101,32 @@ import axios from 'axios';
                               }
                             }`
                     })
+        } catch (e) {
+          alert(e);
+          console.log('err', e)
+        }
+      },
+      async resetCard() {
+        try {
+          await axios.post(
+                  this.graphqlURL, {
+                    query: `mutation {
+                              updatePlayer(
+                                input: {
+                                  where: { id: "${this.player.id}" }
+                                  data: {
+                                    chosenCard: null
+                                  }
+                                }
+                              ) {
+                                player {
+                                  id
+                                  name
+                                }
+                              }
+                            }`
+                    })
+          this.player.chosenCard = null;
         } catch (e) {
           alert(e);
           console.log('err', e)

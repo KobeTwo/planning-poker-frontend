@@ -34,8 +34,16 @@ export default new Vuex.Store({
     setCurrentPlayer(context, currentPlayer){
       context.commit('setCurrentPlayer', currentPlayer)
     },
-    setAllPlayers(context, allPlayers){
+    setAllPlayers(context,  allPlayers){
       context.commit('setAllPlayers', allPlayers)
+      if(context.getters.currentPlayer){
+        let currentPlayer = allPlayers.find(currentPlayer => currentPlayer.id === context.getters.currentPlayer.id);
+        if(currentPlayer){
+          context.commit('setCurrentPlayer', currentPlayer);
+        }else{
+          context.commit('setCurrentPlayer', {});
+        }
+      }
     }
   },
   modules: {

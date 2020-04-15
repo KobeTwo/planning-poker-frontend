@@ -96,6 +96,38 @@ Vue.mixin({
         alert(e);
         console.log('err', e)
       }
+    },
+    async getAllPlayers () {
+      try {
+        let res = await axios.post(
+                  this.graphqlURL, {
+                    query: `query {
+                              gameinstance( id: "${this.$attrs.gameInstanceId}")
+                              {
+                                id
+                                players
+                                {
+                                  id
+                                  name
+                                  chosenCard {
+                                  id
+                                  name
+                                  value
+                                  shortDescription
+                                  longDescription
+                                  icon {
+                                    url
+                                  }
+                              }
+                                }
+                              }
+                            }`
+                  })
+        this.$store.dispatch('setAllPlayers', res.data.data.gameinstance.players)
+      } catch (e) {
+        alert(e);
+        console.log('err', e)
+      }
     }
   }
 })

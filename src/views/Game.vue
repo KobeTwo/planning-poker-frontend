@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-overlay :show="showEnterNameFormOverlay" rounded="sm">
+    <b-overlay no-center :show="showEnterNameFormOverlay" rounded="sm">
       <Nav/>
       <b-jumbotron fluid container-fluid header-level="5" :header="this.gameInstance.title" :lead="this.gameInstance.description">
         <hr class="my-4">
@@ -45,28 +45,35 @@ export default {
     },
     player () {
       return this.$store.getters.currentPlayer
+    },
+    allPlayers() {
+      return this.$store.getters.appPlayers
     }
   },
   created() {
     this.initGameInstance();
-    setInterval(function () {   
-      if(this.player){
-        this.sendPlayerKeepAlive();
-      }    
-    }.bind(this), 2000);
     setInterval(function () {       
       this.getAllPlayers();
     }.bind(this), 2000);
   },
   watch: {
     gameInstance () {
-      this.evaluateEnterNameFormOverlay();
       this.getPlayer();
-    },
-    player() {
       this.evaluateEnterNameFormOverlay();
+    },
+    player(val) {
+      if(!val.id){
+        this.$cookies.remove("player_" + this.$attrs.gameInstanceId)
+      }
+      this.evaluateEnterNameFormOverlay();
+    },
+    allPlayers(newAllPlayers, oldAllPlayers) {
+      let joined = newAllPlayers.filter(x => !oldAllPlayers.includes(x));
+       alert(joined);
+      joined.forEach(function (player) {
+        alert(player.id);
+      })
     }
-
   },
   methods:{
     evaluateEnterNameFormOverlay () {
@@ -79,71 +86,15 @@ export default {
     async getPlayer () {
       try {
         let playerId = this.$cookies.get("player_" + this.$attrs.gameInstanceId);
-        let res = await axios.post(
-                this.graphqlURL, {
-                  query: `query {
-                            player(id: "${playerId}")
-                            {
-                              id
-                              name
-                              chosenCard {
-                                id
-                                name
-                                value
-                                shortDescription
-                                longDescription
-                                icon {
-                                  url
-                                }
-                              }
-                            }
-                          }`
-                })
-        this.$store.dispatch('setCurrentPlayer', res.data.data.player)
-      } catch (e) {
-        alert(e);
-        console.log('err', e)
-      }
-    },
-    async sendPlayerKeepAlive () {
-      try {
-        await axios.post(
-                  this.graphqlURL, {
-                    query: `mutation {
-                              updatePlayer(
-                                input: {
-                                  where: { id: "${this.player.id}" }
-                                  data: {
-                                    lastActive: "${new Date().toISOString()}"
-                                  }
-                                }
-                              ) {
-                                player {
-                                  id
-                                  name
-                                }
-                              }
-                            }`
-                  })
-      } catch (e) {
-        alert(e);
-        console.log('err', e)
-      }
-    },
-    async getAllPlayers () {
-      try {
-        let res = await axios.post(
+        if(this.$cookies.get("player_" + this.gameInstance.id)){
+          let res = await axios.post(
                   this.graphqlURL, {
                     query: `query {
-                              gameinstance( id: "${this.$attrs.gameInstanceId}")
+                              player(id: "${playerId}")
                               {
                                 id
-                                players ( where: {lastActive_gt:"${new Date(new Date - 20000).toISOString()}"})
-                                {
-                                  id
-                                  name
-                                  lastActive
-                                  chosenCard {
+                                name
+                                chosenCard {
                                   id
                                   name
                                   value
@@ -152,12 +103,15 @@ export default {
                                   icon {
                                     url
                                   }
-                              }
                                 }
                               }
                             }`
                   })
-        this.$store.dispatch('setAllPlayers', res.data.data.gameinstance.players)
+          let currentPlayer = res.data.data.player;
+          if(currentPlayer){
+            this.$store.dispatch('setCurrentPlayer', res.data.data.player)
+          }
+        }
       } catch (e) {
         alert(e);
         console.log('err', e)

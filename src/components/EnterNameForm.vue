@@ -1,22 +1,35 @@
 <template>
   <div class="games">
-    <h1>Start a new game</h1>
-    <b-form @submit="onSubmit" >
-      <b-form-group
-        id="input-group-name"
-        label="Name:"
-        label-for="input-name"
-        description="Your name"
-      >
-        <b-form-input
-          id="input-name"
-          v-model="form.name"
-          required
-          placeholder="Enter your name"
-        ></b-form-input>
-      </b-form-group>
-      <b-button type="submit" variant="primary">Submit</b-button>
-    </b-form>
+    <b-container>
+      <b-row>
+        <b-col>
+          <h1 class="m-5">Enter your name to play</h1>
+        </b-col>
+      </b-row>
+      <b-row class="justify-content-md-center">
+        <b-col col>
+          <b-form @submit="onSubmit">
+            <b-form-group
+              id="input-group-name"
+            >
+            <b-input-group >
+              <template v-slot:prepend><b-input-group-text><b-icon-person/></b-input-group-text></template>
+              <b-form-input
+                id="input-name"
+                v-model="form.name"
+                required
+                placeholder="Enter your name"
+              ></b-form-input>
+              <template v-slot:append>
+                <b-button type="submit" variant="primary">Submit</b-button>
+              </template>
+            </b-input-group>
+            </b-form-group>
+            
+          </b-form>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -46,7 +59,6 @@
                                 input: {
                                   data: {
                                     name: "${this.form.name}"
-                                    lastActive: "${new Date().toISOString()}"
                                     gameinstance: "${this.gameInstance.id}"
                                   }
                                 }
