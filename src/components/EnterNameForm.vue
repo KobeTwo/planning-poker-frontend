@@ -17,6 +17,7 @@
               <b-form-input
                 id="input-name"
                 v-model="form.name"
+                autofocus
                 required
                 placeholder="Enter your name"
               ></b-form-input>

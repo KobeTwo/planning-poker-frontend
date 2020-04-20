@@ -47,7 +47,13 @@ export default {
       return this.$store.getters.currentPlayer
     },
     allPlayers() {
-      return this.$store.getters.appPlayers
+      return this.$store.getters.TODOallPlayers
+    },
+    consent() {
+      return this.$store.getters.consent
+    },
+    explainPlayers() {
+      return this.$store.getters.explainPlayers
     }
   },
   created() {
@@ -69,10 +75,30 @@ export default {
     },
     allPlayers(newAllPlayers, oldAllPlayers) {
       let joined = newAllPlayers.filter(x => !oldAllPlayers.includes(x));
-       alert(joined);
+      alert(joined);
       joined.forEach(function (player) {
         alert(player.id);
       })
+    },
+    consent(newConsent) {
+      if(newConsent === true){
+        this.$bvToast.toast(`Yay! You reached consent!`, {
+            autoHideDelay: 5000,
+            variant: "success",
+            noCloseButton: true
+          })
+      }
+    },
+    explainPlayers(newExplainPlayers, oldExplainPlayers) {
+      if(newExplainPlayers.length > 0 && oldExplainPlayers.length == 0){
+        let toast = "Please explain your card: "
+        toast += newExplainPlayers.map(player => player.name).join(", ");
+        this.$bvToast.toast(toast, {
+            autoHideDelay: 5000,
+            variant: "success",
+            noCloseButton: true
+          })
+      }
     }
   },
   methods:{

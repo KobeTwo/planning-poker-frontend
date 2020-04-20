@@ -92,6 +92,37 @@ export default new Vuex.Store({
         }
       }
       return true;
+    },
+    consent: (state, getters) => {
+      if(getters.allPlayersVoted && getters.allPlayers.length > 1){
+        let value = getters.allPlayers[0].chosenCard.value;
+        for (const player of getters.allPlayers){
+          if(value !== player.chosenCard.value){
+            return false;
+          }
+        }
+        return true
+      }
+      return false;
+    },
+    consentCard: (state, getters) => {
+      if(getters.consent){
+        return getters.allPlayers[0].chosenCard;
+      }
+      return null;
+    },
+    explainPlayers: (state, getters) => {
+      let explainPlayers = [];
+      if(getters.allPlayersVoted && !getters.consent){
+        let min = Math.min.apply(Math, getters.allPlayers.map(function(player) { return player.chosenCard.value; }))
+        let max = Math.max.apply(Math, getters.allPlayers.map(function(player) { return player.chosenCard.value; }))
+        let minPlayers = getters.allPlayers.filter(function(player){ return player.chosenCard.value == min; })
+        let maxPlayers = getters.allPlayers.filter(function(player){ return player.chosenCard.value == max; })
+        explainPlayers.push(...minPlayers);
+        explainPlayers.push(...maxPlayers);
+      }
+      
+      return explainPlayers
     }
   }
 })

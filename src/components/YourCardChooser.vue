@@ -2,12 +2,17 @@
   <div class="games">
     <h5>Choose your card</h5>
     <b-card 
-        border-variant="primary"
-        header-bg-variant="primary"
-        header-text-variant="white">
+        :border-variant="explainPlayers.includes(player) ? 'danger' : 'primary'"
+        :header-bg-variant="explainPlayers.includes(player) ? 'danger' : 'primary'"
+        header-text-variant="white"
+        >
       
       <template v-slot:header>
-        <b-avatar size="sm" variant="light"></b-avatar> <span class="mr-auto" v-if="player">{{player.name}}</span>
+        <b-avatar size="sm" variant="light"></b-avatar> 
+        <span class="mr-auto" v-if="player">
+          {{player.name}}
+        </span>
+        <b-icon-chat-dots-fill v-if="explainPlayers.includes(player)"/>
       </template>
       <b-container fluid  v-if="this.player && !this.player.chosenCard">
         <b-row align-content="center" cols="1" cols-sm="2" cols-md="3" cols-lg="4" cols-xl="5">
@@ -20,6 +25,9 @@
               class="text-center"
               style="max-width: 10rem; width: 10rem;"
               @click="chooseCard(card)"
+              @mouseenter="hoverCard = card.value"
+              @mouseleave="hoverCard = -1"
+              :class="hoverCard === card.value ? 'shadow-lg border-primary' : ''"
             >
               <b-card-text>{{ card.shortDescription }}</b-card-text>
             </b-card>
@@ -64,7 +72,8 @@ import axios from 'axios';
   export default {
     data: function () {
       return {
-        showCardResetOverlay: false
+        showCardResetOverlay: false,
+        hoverCard: -1
       }
     },
     computed: {
@@ -76,6 +85,9 @@ import axios from 'axios';
       },
       player () {
         return this.$store.getters.currentPlayer
+      },
+      explainPlayers() {
+        return this.$store.getters.explainPlayers
       }
     },
     methods:{

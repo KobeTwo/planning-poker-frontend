@@ -4,9 +4,14 @@
     <b-container fluid>
         <b-row align-content="center" cols="1" cols-sm="2" cols-md="3" cols-lg="4" cols-xl="5">
           <b-col class="mt-3" v-for="player in otherPlayers" :key="player.name">
-            <b-card>
+            <b-card
+            :border-variant="explainPlayers.includes(player) ? 'danger' : 'primary'">
               <template v-slot:header>
-                <b-avatar size="sm" variant="secondary"></b-avatar> <span class="mr-auto" v-if="player">{{player.name}}</span>
+                <b-avatar size="sm" variant="secondary"></b-avatar> 
+                <span class="mr-auto" v-if="player">
+                  {{player.name}}
+                </span>
+                <b-icon-chat-dots-fill v-if="explainPlayers.includes(player)" variant="danger"/>
               </template>
               <b-card v-if="allPlayersVoted"
                 :title=player.chosenCard.value.toString()
@@ -50,6 +55,9 @@
       },
       allPlayersVoted() {
         return this.$store.getters.allPlayersVoted
+      },
+      explainPlayers() {
+        return this.$store.getters.explainPlayers
       }
     }
   }
