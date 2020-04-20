@@ -1,0 +1,12 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/planning-poker-frontend:$SHORT_SHA', '.']
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/planning-poker-frontend:$SHORT_SHA"]
+  - name: "gcr.io/cloud-builders/gke-deploy"
+    args:
+    - run
+    - --filename=./deployment
+    - --image=gcr.io/$PROJECT_ID/planning-poker-frontend:$SHORT_SHA
+    - --location=europe-west3-a	
+    - --cluster=ds-tools

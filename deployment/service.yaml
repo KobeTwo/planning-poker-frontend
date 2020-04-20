@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: planning-poker-frontend
+  namespace: planning-poker
+spec:
+  type: NodePort
+  selector:
+    app: planning-poker-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
