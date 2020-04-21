@@ -6,7 +6,7 @@ steps:
   - name: "gcr.io/cloud-builders/gke-deploy"
     args:
     - run
-    - --filename=./deployment
+    - --filename=./deployment/k8s
     - --image=gcr.io/$PROJECT_ID/planning-poker-frontend:$SHORT_SHA
     - --location=europe-west3-a	
     - --cluster=ds-tools
