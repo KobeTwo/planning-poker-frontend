@@ -2,8 +2,8 @@
   <div class="games">
     <h5>Choose your card</h5>
     <b-card 
-        :border-variant="explainPlayers.includes(player) ? 'danger' : 'primary'"
-        :header-bg-variant="explainPlayers.includes(player) ? 'danger' : 'primary'"
+        :border-variant="consent ? 'success' : explainPlayers.includes(player) ? 'danger' : 'primary'"
+        :header-bg-variant="consent ? 'success' : explainPlayers.includes(player) ? 'danger' : 'primary'"
         header-text-variant="white"
         >
       
@@ -38,10 +38,8 @@
         <b-row align-content="center">
           <b-col class="mt-3">
             <div @click="resetCard()" style="max-width: 10rem; width: 10rem;" @mouseenter="showCardResetOverlay = true" @mouseleave="showCardResetOverlay = false">
-              <b-overlay :show="showCardResetOverlay" >
+              <b-overlay :show="showCardResetOverlay" variant="primary">
                 <b-card 
-                  bg-variant="primary" text-variant="white"
-                  sub-title-text-variant="white"
                   :title=this.player.chosenCard.value.toString()
                   :sub-title=this.player.chosenCard.name 
                   img-top
@@ -51,8 +49,8 @@
                 >
                   <b-card-text>{{ this.player.chosenCard.shortDescription }}</b-card-text>
                 </b-card> 
-                <template v-slot:overlay>
-                  <div class="text-center">
+                <template v-slot:overlay class="text-center">
+                  <div class="text-center text-white">
                     <b-icon-pencil-square  style="width: 2rem; height: 2rem;"/>
                     <br/>
                     Click to edit
@@ -88,6 +86,9 @@ import axios from 'axios';
       },
       explainPlayers() {
         return this.$store.getters.explainPlayers
+      },
+      consent() {
+        return this.$store.getters.consent
       }
     },
     methods:{

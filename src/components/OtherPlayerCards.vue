@@ -5,7 +5,7 @@
         <b-row align-content="center" cols="1" cols-sm="2" cols-md="3" cols-lg="4" cols-xl="5">
           <b-col class="mt-3" v-for="player in otherPlayers" :key="player.name">
             <b-card
-            :border-variant="explainPlayers.includes(player) ? 'danger' : 'primary'">
+            :border-variant="consent ? 'success' : explainPlayers.includes(player) ? 'danger' : 'primary'">
               <template v-slot:header>
                 <b-avatar size="sm" variant="secondary"></b-avatar> 
                 <span class="mr-auto" v-if="player">
@@ -58,6 +58,9 @@
       },
       explainPlayers() {
         return this.$store.getters.explainPlayers
+      },
+      consent() {
+        return this.$store.getters.consent
       }
     }
   }
