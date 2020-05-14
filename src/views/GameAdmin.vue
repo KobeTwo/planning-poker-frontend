@@ -21,6 +21,7 @@
 import Nav from '@/components/Nav.vue'
 import ClipboardGameURL from '@/components/ClipboardGameURL.vue'
 import GameAdminPlayerList from '@/components/GameAdminPlayerList.vue'
+
 export default {
   name: 'gameadmin',
   components: {
@@ -28,11 +29,19 @@ export default {
     ClipboardGameURL,
     GameAdminPlayerList
   },
+  data: function () {
+    return {
+      gameAdminUpdatePlayerInterval: ''
+    }
+  },
   created() {
     this.initGameInstance();
-    setInterval(function () {       
+    this.gameAdminUpdatePlayerInterval = setInterval(function () {       
       this.getAllPlayers();
     }.bind(this), 2000);
+  },
+  beforeDestroy: function(){
+    clearInterval(this.gameAdminUpdatePlayerInterval);
   },
   computed: {
     gameInstance () {
